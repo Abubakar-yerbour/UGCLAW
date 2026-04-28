@@ -1,179 +1,274 @@
-# UGCLAW — Autonomous AI Agent
+<div align="center">
 
-A minimal, self-hostable AI agent with a terminal interface, Telegram remote control,
-browser automation, background subagents, and support for five LLM providers.
+```
+ ██╗   ██╗ ██████╗  ██████╗██╗      █████╗ ██╗    ██╗
+ ██║   ██║██╔════╝ ██╔════╝██║     ██╔══██╗██║    ██║
+ ██║   ██║██║  ███╗██║     ██║     ███████║██║ █╗ ██║
+ ██║   ██║██║   ██║██║     ██║     ██╔══██║██║███╗██║
+ ╚██████╔╝╚██████╔╝╚██████╗███████╗██║  ██║╚███╔███╔╝
+  ╚═════╝  ╚═════╝  ╚═════╝╚══════╝╚═╝  ╚═╝ ╚══╝╚══╝
+```
 
-**Author:** Abubakar Bello — abubakarbello3914@gmail.com
+**Autonomous AI Agent System**
+
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square&logo=python)](https://python.org)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
+[![Telegram](https://img.shields.io/badge/Channel-@UGCLAW-26A5E4?style=flat-square&logo=telegram)](https://t.me/UGCLAW)
+[![Version](https://img.shields.io/badge/Version-3.0.0-purple?style=flat-square)](https://github.com/Abubakar-yerbour/UGCLAW/releases)
+
+*A persistent, tool-calling AI agent you control entirely from Telegram or your terminal — runs 24/7 as a background daemon on your own server.*
+
+</div>
+
+---
+
+## What is UGCLAW?
+
+UGCLAW is a self-hosted autonomous AI agent that runs as a persistent background daemon on your Linux server or machine. You interact with it through Telegram or a terminal interface, and it can execute shell commands, browse the web, manage files, and spawn parallel background subagents to handle long-running tasks — all without blocking your conversation.
+
+It is provider-agnostic: you can use OpenAI, Anthropic, or any compatible LLM, and switch models mid-session without losing history. Subagents can even run on a different model than your main session.
 
 ---
 
 ## Features
 
-- **Multi-provider LLM** — OpenAI, Anthropic, Google Gemini, Groq, OpenRouter
-- **Always-on daemon** — survives terminal close, keeps Telegram active
-- **Telegram bot** — full remote control with 15+ commands and autocomplete
-- **Browser automation** — login to pages, fill forms, take screenshots
-- **Background subagents** — spawn parallel AI tasks that run independently
-- **Persistent memory** — AGENT.md identity file, long-term facts, session history
-- **Interactive config TUI** — arrow-key model browser with live search
+- **Persistent daemon** — runs in the background, survives terminal exits, auto-restarts on boot
+- **Telegram interface** — full agent control from your phone, anywhere in the world
+- **Terminal UI** — interactive chat directly in your terminal
+- **Tool-calling agent** — executes real tools: shell, web fetch, file read/write, browser automation
+- **Parallel subagents** — spawn multiple background AI workers for long tasks; get notified on Telegram when they finish
+- **Multi-provider** — OpenAI, Anthropic Claude, and any OpenAI-compatible API; hot-swap mid-session
+- **Persistent memory** — facts and `AGENT.md` survive across sessions
+- **Browser automation** — full Chromium via Playwright: navigate, login, screenshot, execute JS
+- **Auto-update** — checks GitHub for new releases on startup and notifies via Telegram daily
+- **Boot service** — one command to install as a systemd or launchd service
 
 ---
 
-## Installation
+## Quick Start
+
+### 1. Clone and install
 
 ```bash
-git clone https://github.com/abubakarbello3914/ugclaw
-cd ugclaw
-python3 install.py
+git clone https://github.com/Abubakar-yerbour/UGCLAW.git
+cd UGCLAW
+
+# Recommended: use a virtual environment
+python3 -m venv myenv
+source myenv/bin/activate
+
+python install.py
 ```
 
-The installer will:
-- Check Python version (3.10+ required)
-- Install all dependencies
-- Register the `ugclaw` command system-wide
-- Install Playwright Chromium (optional, for browser tools)
-- Create `~/.ugclaw/` data directory
-
----
-
-## Quick start
+### 2. Configure
 
 ```bash
-# 1. Configure (interactive TUI)
 ugclaw configure
-
-# 2. Start the daemon
-ugclaw start
-
-# 3. Open terminal chat
-ugclaw tui
-
-# 4. (Optional) Start automatically at login
-ugclaw enable
 ```
 
----
+This walks you through:
+- Setting your LLM provider API keys (OpenAI, Anthropic, etc.)
+- Setting your Telegram bot token (get one from [@BotFather](https://t.me/BotFather))
+- Fetching and selecting your model
 
-## Commands
-
-```
-ugclaw start              Start the background daemon
-ugclaw stop               Stop the daemon
-ugclaw restart            Restart the daemon
-ugclaw status             Show system status
-ugclaw tui                Open terminal chat interface
-ugclaw logs               Tail the daemon log
-
-ugclaw configure              Full configuration menu
-ugclaw configure providers    Set API keys
-ugclaw configure models       Fetch and select models
-ugclaw configure telegram     Configure Telegram bot
-ugclaw configure active       Set active provider/model
-ugclaw configure advanced     Timeouts, limits, etc.
-
-ugclaw telegram approve <uid>   Allow a Telegram user
-ugclaw telegram deny <uid>      Block a Telegram user
-ugclaw telegram list            Show allowed users
-ugclaw telegram test            Test bot connection
-
-ugclaw enable             Install as boot service (Linux/macOS)
-ugclaw disable            Remove boot service
-```
-
----
-
-## Telegram Setup
-
-1. Message **@BotFather** on Telegram → `/newbot`
-2. Copy the token it gives you
-3. Get your user ID from **@userinfobot**
-4. Run:
+Or jump to a specific section:
 
 ```bash
-ugclaw configure telegram
+ugclaw configure providers   # API keys
+ugclaw configure telegram    # Telegram bot token
+ugclaw configure models      # fetch and select models
+ugclaw configure active      # set active provider and model
 ```
 
-Enter the token and your user ID. The bot will register all commands with
-Telegram automatically so you get autocomplete.
+### 3. Start
 
-### Telegram Commands
+```bash
+ugclaw start
+```
+
+### 4. Use it
+
+```bash
+ugclaw tui        # terminal chat interface
+```
+
+Or open Telegram and start talking to your bot.
+
+---
+
+## Telegram Commands
 
 | Command | Description |
 |---|---|
-| `/start` | Initialise session |
-| `/help` | Show all commands |
+| `/start` | Initialise or resume your session |
+| `/help` | Show all available commands |
 | `/status` | Daemon and model status |
-| `/models` | Switch provider and model |
-| `/agents` | List background subagents |
-| `/kill <id>` | Kill a subagent |
-| `/reset` | Clear conversation history |
-| `/new` | Fresh session (keeps memory) |
-| `/restart` | Restart agent brain |
-| `/usage` | Session statistics |
-| `/tools` | List available tools |
-| `/memory` | Show remembered facts |
-| `/approve <uid>` | Approve a user |
+| `/models` | Switch AI provider and model |
+| `/agents` | List all background subagents |
+| `/kill <id>` | Kill a running subagent |
+| `/reset` | Clear current conversation history |
+| `/new` | Start a fresh session (keeps memory) |
+| `/restart` | Restart the agent brain for this chat |
+| `/usage` | Show session usage statistics |
+| `/tools` | List all tools the agent can use |
+| `/memory` | Show what the agent remembers |
+| `/approve <uid>` | Approve a Telegram user |
 | `/deny <uid>` | Remove a user's access |
-| `/allowed` | List allowed users |
+| `/allowed` | List approved Telegram user IDs |
+
+Or just talk naturally — no slash command needed for regular messages.
 
 ---
 
-## Providers
+## Available Tools
 
-| Provider | Models fetched from API |
+| Tool | Description |
 |---|---|
-| OpenAI | Yes |
-| Anthropic | Static list |
-| Google Gemini | Yes |
-| Groq | Yes |
-| OpenRouter | Yes (1000+ models, searchable) |
+| `exec` | Run shell commands (nmap, curl, scripts, anything) |
+| `web_fetch` | Fetch a URL and return readable text + links |
+| `read_file` | Read a file from the workspace |
+| `write_file` | Write content to a file |
+| `list_files` | List files in the workspace |
+| `delete_file` | Delete a file |
+| `browser_navigate` | Open a URL in real Chromium |
+| `browser_fill` | Fill a form field by CSS selector |
+| `browser_click` | Click an element |
+| `browser_login` | High-level login in one call |
+| `browser_get_text` | Get readable text of current page |
+| `browser_get_html` | Get raw HTML of current page |
+| `browser_screenshot` | Screenshot the current page |
+| `browser_execute_js` | Execute JavaScript in the browser |
+| `create_subagent` | Spawn a background AI subagent |
+| `list_subagents` | List all running subagents |
+| `get_subagent_status` | Get status of a subagent |
+| `get_subagent_logs` | Get full logs from a subagent |
+| `kill_subagent` | Stop a running subagent |
+| `update_memory` | Persist a fact or update AGENT.md |
+| `read_memory` | Read stored facts and AGENT.md |
+| `delete_memory` | Delete a stored fact |
+| `send_message` | Send a Telegram message to a chat |
+| `send_file` | Send a file to a Telegram chat |
+| `manage_telegram_access` | Add/remove Telegram users from allowlist |
 
-Run `ugclaw configure models` to fetch and save the models you want,
-then switch between them anytime from TUI or Telegram.
+---
+
+## Subagents
+
+Subagents are background AI workers you can spawn for long-running tasks. They run in parallel without blocking your main conversation, and notify you on Telegram when they finish with their full result.
+
+**Example usage** (just talk naturally):
+
+```
+Spawn a subagent to do a full nmap scan on 192.168.1.1 and report findings
+```
+
+```
+Create a subagent using GPT-4o to write a full penetration testing report
+for the findings in /workspace/scan.txt
+```
+
+```
+Spawn three subagents: one to scan port 80, one for port 443, one to check DNS
+```
+
+Each subagent can use a different model or provider than your main session.
+
+---
+
+## CLI Reference
+
+```
+ugclaw start              Start the daemon
+ugclaw stop               Stop the daemon
+ugclaw restart            Restart the daemon
+ugclaw status             Show daemon and system status
+ugclaw tui                Open terminal chat interface
+ugclaw logs               Tail the daemon log (Ctrl+C to exit)
+ugclaw update             Check for updates and install
+ugclaw configure          Full configuration menu
+ugclaw telegram approve <uid>   Allow a Telegram user
+ugclaw telegram deny <uid>      Remove a user's access
+ugclaw telegram list            List allowed users
+ugclaw telegram test            Test bot connection
+ugclaw enable             Install as a boot service (systemd/launchd)
+ugclaw disable            Remove boot service
+ugclaw --version          Show version
+ugclaw --help             Show help
+```
 
 ---
 
 ## Project Structure
 
 ```
-ugclaw/                   ← installable Python package
-├── __init__.py           version, author info
-├── __main__.py           python -m ugclaw support
-├── main.py               CLI dispatcher
-├── daemon.py             persistent gateway process
-├── agent.py              LLM brain, tool-call loop
-├── providers.py          unified multi-provider LLM client
-├── tools.py              all tool definitions and implementations
-├── subagents.py          background subagent manager
-├── memory.py             AGENT.md, facts, session history
-├── browser.py            Playwright browser automation
-├── configure.py          interactive curses configuration TUI
-├── telegram_bot.py       Telegram polling and command handling
-├── config_manager.py     robust config load/save/validate
-└── paths.py              central path definitions (~/.ugclaw)
-
-config/
-└── default_config.json   template, copied to ~/.ugclaw on install
-
-install.py                one-shot installer
-setup.py                  pip package entry point
+UGCLAW/
+├── install.py              # Installer
+├── requirements.txt        # Python dependencies
+├── setup.py                # Package setup
+├── default_config.json     # Config template
+└── ugclaw/
+    ├── __init__.py         # Version info
+    ├── agent.py            # LLM tool-calling loop
+    ├── browser.py          # Playwright browser session
+    ├── config_manager.py   # Config load/save
+    ├── configure.py        # Interactive configuration wizard
+    ├── daemon.py           # Persistent background daemon
+    ├── main.py             # CLI entry point
+    ├── memory.py           # Persistent memory (facts + AGENT.md)
+    ├── paths.py            # Filesystem paths
+    ├── providers.py        # LLM provider clients
+    ├── subagents.py        # Background subagent manager
+    ├── telegram_bot.py     # Telegram bot interface
+    ├── tools.py            # All agent tools
+    └── updater.py          # Auto-update checker
 ```
-
-Data is stored in `~/.ugclaw/` — independent of the project directory.
 
 ---
 
-## Data Directory
+## Data & Config
+
+All runtime data lives in `~/.ugclaw/`:
 
 ```
 ~/.ugclaw/
-├── config.json           your configuration
-├── AGENT.md              agent identity file (auto-updated)
-├── facts.json            long-term key-value memory
-├── workspace/            files, screenshots, tool output
-├── sessions/             per-session conversation history
-└── logs/daemon.log       daemon log file
+├── config.json         # Your configuration (API keys, tokens, settings)
+├── workspace/          # Agent working directory (files, downloads)
+├── sessions/           # Conversation history per session
+└── logs/
+    └── daemon.log      # Daemon log
 ```
+
+---
+
+## Boot Service
+
+Install UGCLAW as a system service so it starts automatically:
+
+```bash
+ugclaw enable    # install and start service
+ugclaw disable   # remove service
+```
+
+Supports **systemd** (Linux) and **launchd** (macOS).
+
+---
+
+## Updating
+
+```bash
+ugclaw update
+```
+
+UGCLAW also checks for updates silently on every `ugclaw start` and `ugclaw tui`, and sends a Telegram notification to active sessions once per day if a newer version is available.
+
+---
+
+## Requirements
+
+- Python 3.10+
+- Linux or macOS (Windows not officially supported)
+- An API key for at least one supported LLM provider
+- A Telegram bot token (optional but recommended) — get one from [@BotFather](https://t.me/BotFather)
 
 ---
 
@@ -181,3 +276,12 @@ Data is stored in `~/.ugclaw/` — independent of the project directory.
 
 MIT — see [LICENSE](LICENSE)
 
+---
+
+<div align="center">
+
+**Built by [Abubakar Bello](mailto:abubakarbello3914@gmail.com)**
+
+[Telegram Channel](https://t.me/UGCLAW) · [Report a Bug](https://github.com/Abubakar-yerbour/UGCLAW/issues) · [Request a Feature](https://github.com/Abubakar-yerbour/UGCLAW/issues)
+
+</div>
