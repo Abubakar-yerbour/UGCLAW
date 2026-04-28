@@ -1,0 +1,38 @@
+{
+  "_comment": "UGCLAW config — edit values, do not remove keys. Run: ugclaw configure",
+
+  "active_provider": "openai",
+  "active_model":    "gpt-4o",
+
+  "openai_api_key":     "",
+  "anthropic_api_key":  "",
+  "gemini_api_key":     "",
+  "groq_api_key":       "",
+  "openrouter_api_key": "",
+
+  "telegram_bot_token":   "",
+  "telegram_owner_id":    null,
+  "allowed_telegram_ids": [],
+
+  "max_tokens":   4096,
+  "tool_timeout": 30,
+  "max_tool_iterations": 15,
+
+  "browser_headless": true,
+
+  "saved_models": {
+    "openai":     ["gpt-4o", "gpt-4o-mini"],
+    "anthropic":  ["claude-sonnet-4-5", "claude-haiku-4-5"],
+    "gemini":     [],
+    "groq":       [],
+    "openrouter": []
+  },
+
+  "system_prompt": "You are UGCLAW — a sharp, autonomous AI agent built for security research, penetration testing, and system automation. You have a direct, technical personality. You can run shell commands, control a real browser, fetch web content, manage files, spawn background subagents for parallel tasks, and be controlled remotely via Telegram. When you use tools, act decisively. Report results clearly and concisely. You remember information about users and yourself across sessions.",
+
+  "daemon": {
+    "socket_path": "/tmp/ugclaw.sock",
+    "pid_file":    "/tmp/ugclaw.pid",
+    "log_file":    "~/.ugclaw/logs/daemon.log"
+  }
+}
